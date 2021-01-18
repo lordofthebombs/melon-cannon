@@ -1,3 +1,5 @@
+AddCSLuaFile()
+
 -- SWEP Metainfo
 SWEP.PrintName = "Melon Cannon"
 SWEP.Author = "lordofthebombs"
