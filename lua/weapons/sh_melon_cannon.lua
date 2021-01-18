@@ -1,4 +1,4 @@
--- SWEP Metainfo
+-- SWEP Data
 SWEP.PrintName = "Melon Cannon"
 SWEP.Author = "lordofthebombs"
 SWEP.Contact = "https://steamcommunity.com/id/lordofthebombs/"
@@ -26,37 +26,38 @@ SWEP.SlotPos = 2
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = true
 
+SWEP.CSMuzzleFlashes = true
+
 SWEP.ViewModel = "models/weapons/c_pistol.mdl"
 SWEP.WorldModel = "models/weapons/w_pistol.mdl"
 SWEP.UseHands = true
 
-SWEP.ShootSound = Sound("Metal.SawbladeStick")
+SWEP.ShootSound = Sound("sound/Grenade_launcher_shoot.wav")
 
 function SWEP:PrimaryAttack()
-    local fire_rate = 0.5
+    local fire_rate = 0.2
     self:SetNextPrimaryFire(CurTime() + fire_rate)    -- Fire rate
-    
     -- Shooting the melon
     self:shoot_melon()
 end
 
+function SWEP:SecondaryAttack()
+    local fire_rate = 1.0
+    self:SetNextSecondaryFire(CurTime() + fire_rate)
+    self:shoot_cluster()
+end
+
 -- Function to shoot the single melon
 function SWEP:shoot_melon()
-    print("Shooting!")
-
     local owner = self:GetOwner()
-
-    if not owner:IsValid() then print("Owner is valid") return end
-
-    -- Plays sound when fired
-    self:EmitSound(self.ShootSound)
+    if not owner:IsValid() then return end
 
     if CLIENT then return end   -- Ending all client related activities here
 
     local ent = ents.Create("prop_physics")
-    
+
     -- Check to see if entity is created
-    if not ent:IsValid() then print("Entity is valid") return end
+    if not ent:IsValid() then return end
 
     -- Setting melon as the prop
     ent:SetModel("models/props_junk/watermelon01.mdl")
@@ -66,7 +67,7 @@ function SWEP:shoot_melon()
     local pos = aimvec * 16
     pos:Add(owner:EyePos())     -- Translates vector to world coordinates
 
-    -- Setting position 16 units in front of eyes and the eye angles
+    -- Setting position 16 units in front of eyes
     ent:SetPos(pos)
     ent:SetAngles(owner:EyeAngles())
 
@@ -76,12 +77,14 @@ function SWEP:shoot_melon()
     -- Getting physics of entity
     local phys = ent:GetPhysicsObject()
     if not phys:IsValid() then ent:Remove() return end      -- Ends script if physics is invalid
-    aimvec:Mul( 100 )
-	aimvec:Add( VectorRand( -10, 10 ) ) -- Add a random vector with elements [-10, 10)
+    aimvec:Mul(1000000)
 	phys:ApplyForceCenter( aimvec )
  
 	-- Assuming we're playing in Sandbox mode we want to add this
 	-- entity to the cleanup and undo lists. This is done like so.
 	cleanup.Add( owner, "props", ent )
+end
 
+function SWEP:shoot_cluster()
+    
 end
