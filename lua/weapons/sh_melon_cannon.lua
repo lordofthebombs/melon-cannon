@@ -32,7 +32,7 @@ SWEP.ViewModel = "models/weapons/c_pistol.mdl"
 SWEP.WorldModel = "models/weapons/w_pistol.mdl"
 SWEP.UseHands = true
 
-SWEP.ShootSound = Sound("sound/Grenade_launcher_shoot.wav")
+SWEP.ShootSound = Sound("garrysmod/addons/melon_cannon/lua/weapons/sound/Grenade_launcher_shoot.wav")
 
 function SWEP:PrimaryAttack()
     local fire_rate = 0.2
