@@ -28,10 +28,11 @@ SWEP.DrawCrosshair 						= true
 
 SWEP.CSMuzzleFlashes 					= true
 
-
-SWEP.ViewModel = "models/weapons/c_rpg.mdl"
-SWEP.WorldModel = "models/weapons/w_rocket_launcher.mdl"
-SWEP.UseHands = true
+-- Weapon view settings
+SWEP.ViewModelFOV 						= 54
+SWEP.ViewModel 							= "models/weapons/c_rpg.mdl"
+SWEP.WorldModel 						= "models/weapons/w_rocket_launcher.mdl"
+SWEP.UseHands 							= true
 SWEP.VElements = {
 	["melon"] = { type = "Model", model = "models/props_junk/watermelon01.mdl", bone = "base", rel = "", pos = Vector(0, -0.218, 32.59), angle = Angle(0, 0, 101.375), size = Vector(0.714, 0.714, 0.714), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 }
