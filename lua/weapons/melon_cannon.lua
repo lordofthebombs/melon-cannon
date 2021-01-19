@@ -1,7 +1,6 @@
 -- SWEP Data
 SWEP.PrintName 							= "Melon Cannon"
 SWEP.Author 							= "lordofthebombs"
-SWEP.Contact 							= "https://steamcommunity.com/id/lordofthebombs/"
 SWEP.Instructions 						= "Left click to fire a melon.\nRight click to fire a cluster of melons."
 SWEP.Spawnable 							= true
 SWEP.AdminOnly 							= false
@@ -11,6 +10,7 @@ SWEP.Primary.ClipSize 					= -1
 SWEP.Primary.DefaultClip 				= -1
 SWEP.Primary.Automatic 					= true
 SWEP.Primary.Ammo 						= "none"
+SWEP.Primary.Recoil						= 10
 
 SWEP.Secondary.ClipSize 				= -1
 SWEP.Secondary.DefaultClip 				= -1
@@ -39,11 +39,10 @@ SWEP.WElements = {
 	["melon"] = { type = "Model", model = "models/props_junk/watermelon01.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(19.6, 1.662, -9.867), angle = Angle(7.737, -87.154, -20.934), size = Vector(0.397, 0.397, 0.397), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 }
 
-
-SWEP.ShootSound = Sound("Weapon_AR2.Single")
+SWEP.ShootSound = Sound("Weapon_Crossbow.Single")
 
 function SWEP:PrimaryAttack()
-    local fire_rate = 0.2
+    local fire_rate = 0.5
     self:SetNextPrimaryFire(CurTime() + fire_rate)    -- Fire rate
     -- Shooting the melon
     self:shoot_melon()
@@ -72,18 +71,25 @@ function SWEP:shoot_melon()
     -- Getting aim vector so I can place the melon at the correct place when firing
     local aimvec = owner:GetAimVector()
     local pos = aimvec * 16
-    pos:Add(owner:EyePos())     -- Translates vector to world coordinates
+	pos:Add(owner:EyePos())     -- Translates vector to world coordinates
 
     -- Setting position 16 units in front of eyes
-    ent:SetPos(pos)
-    ent:SetAngles(owner:EyeAngles())
+	ent:SetPos(pos)
+	local offset = Angle(0, -90, 0)
+    ent:SetAngles(owner:EyeAngles() + offset)
     ent:Spawn()
 
     -- Getting physics of entity
     local phys = ent:GetPhysicsObject()
     if not phys:IsValid() then ent:Remove() return end      -- Ends script if physics is invalid
     aimvec:Mul(1000000)
-	phys:ApplyForceCenter( aimvec )
+	phys:ApplyForceCenter(aimvec)
+	local angle_velocity = Vector(0, 1000, 0)
+	phys:AddAngleVelocity(angle_velocity)
+
+	self:EmitSound(self.ShootSound)
+
+	ent:SetPhysicsAttacker(owner, 5)		-- Sets the player as the attacker
  
 	-- Assuming we're playing in Sandbox mode we want to add this
 	-- entity to the cleanup and undo lists. This is done like so.
@@ -116,6 +122,7 @@ function SWEP:Initialize()
 
 	// other initialize code goes here
 	self:SetWeaponHoldType("rpg")			-- Setting character to hold weapon on the shoulder
+	util.PrecacheSound("sound/Grenade_launcher_shoot.wav")
 
 	if CLIENT then
 	
