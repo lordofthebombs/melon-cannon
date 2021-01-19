@@ -1,15 +1,15 @@
 -- SWEP Data
 SWEP.PrintName 							= "Melon Cannon"
 SWEP.Author 							= "lordofthebombs"
-SWEP.Instructions 						= "Left click to fire a melon.\nRight click to fire a cluster of melons."
+SWEP.Instructions 						= "Left click to fire a melon.\nRight click to fire a cluster of explosive melons."
 SWEP.Spawnable 							= true
 SWEP.AdminOnly 							= false
 
 -- Ammo info
-SWEP.Primary.ClipSize 					= -1
-SWEP.Primary.DefaultClip 				= -1
+SWEP.Primary.ClipSize 					= 10
+SWEP.Primary.DefaultClip 				= 30
 SWEP.Primary.Automatic 					= true
-SWEP.Primary.Ammo 						= "none"
+SWEP.Primary.Ammo 						= "AR2"
 SWEP.Primary.Recoil						= 10
 
 SWEP.Secondary.ClipSize 				= -1
@@ -42,11 +42,16 @@ SWEP.WElements = {
 
 SWEP.ShootSound = Sound("grenade_launcher_shoot.ogg")
 
+-- Set up for muzzle flash
+--game.AddParticles( "particles/muzzleflashes.pcf" )
+--PrecacheParticleSystem( "muzzle_pistols" )
+
 function SWEP:PrimaryAttack()
 	local fire_rate = 0.7
     self:SetNextPrimaryFire(CurTime() + fire_rate)    -- Fire rate
     -- Shooting the melon
-    self:shoot_melon()
+	self:shoot_melon()
+	self:TakePrimaryAmmo(1)
 end
 
 function SWEP:SecondaryAttack()
@@ -82,8 +87,8 @@ function SWEP:shoot_melon()
 	ent:SetPos(pos)
 	local offset = Angle(0, -90, 0)
     ent:SetAngles(owner:EyeAngles() + offset)
-	
 	ent:Spawn()
+
     -- Getting physics of entity
     local phys = ent:GetPhysicsObject()
     if not phys:IsValid() then ent:Remove() return end      -- Ends script if physics is invalid
@@ -94,11 +99,14 @@ function SWEP:shoot_melon()
 
 	self:EmitSound(self.ShootSound)
 
+	-- Muzzle flash
+	--ParticleEffect("muzzle_pistols", pos, owner:EyeAngles(), nil)
+
 	ent:SetPhysicsAttacker(owner, 5)		-- Sets the player as the attacker
  
 	-- Assuming we're playing in Sandbox mode we want to add this
 	-- entity to the cleanup and undo lists. This is done like so.
-	cleanup.Add( owner, "props", ent )
+	cleanup.Add(owner, "props", ent)
 end
 
 
