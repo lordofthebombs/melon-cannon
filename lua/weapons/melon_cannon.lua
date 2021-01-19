@@ -23,7 +23,7 @@ SWEP.AutoSwitchFrom 					= false
 
 SWEP.Slot 								= 1
 SWEP.SlotPos 							= 2
-SWEP.DrawAmmo 							= false
+SWEP.DrawAmmo 							= true
 SWEP.DrawCrosshair 						= true
 
 SWEP.CSMuzzleFlashes 					= true
@@ -43,7 +43,7 @@ SWEP.WElements = {
 SWEP.ShootSound = Sound("Weapon_Crossbow.Single")
 
 function SWEP:PrimaryAttack()
-	local fire_rate = 0.5
+	local fire_rate = 0.7
     self:SetNextPrimaryFire(CurTime() + fire_rate)    -- Fire rate
     -- Shooting the melon
     self:shoot_melon()
