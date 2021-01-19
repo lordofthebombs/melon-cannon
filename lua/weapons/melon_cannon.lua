@@ -43,7 +43,7 @@ SWEP.WElements = {
 SWEP.ShootSound = Sound("Weapon_Crossbow.Single")
 
 function SWEP:PrimaryAttack()
-    local fire_rate = 0.5
+	local fire_rate = 0.5
     self:SetNextPrimaryFire(CurTime() + fire_rate)    -- Fire rate
     -- Shooting the melon
     self:shoot_melon()
@@ -56,7 +56,11 @@ end
 
 -- Function to shoot the single melon
 function SWEP:shoot_melon()
-    local owner = self:GetOwner()
+	local owner = self:GetOwner()
+
+	local punch_angle = Angle(math.random(-10, -8) + math.random(), math.random(-2, 2) + math.random(), math.random(-2, 2) + math.random())
+	owner:ViewPunch(punch_angle)			-- Simulates recoil
+
     if not owner:IsValid() then return end
 
     if CLIENT then return end   -- Ending all client related activities here
@@ -78,8 +82,8 @@ function SWEP:shoot_melon()
 	ent:SetPos(pos)
 	local offset = Angle(0, -90, 0)
     ent:SetAngles(owner:EyeAngles() + offset)
-    ent:Spawn()
-
+	
+	ent:Spawn()
     -- Getting physics of entity
     local phys = ent:GetPhysicsObject()
     if not phys:IsValid() then ent:Remove() return end      -- Ends script if physics is invalid
