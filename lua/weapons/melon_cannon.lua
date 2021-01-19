@@ -40,7 +40,7 @@ SWEP.WElements = {
 	["melon"] = { type = "Model", model = "models/props_junk/watermelon01.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(19.6, 1.662, -9.867), angle = Angle(7.737, -87.154, -20.934), size = Vector(0.397, 0.397, 0.397), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 }
 
-SWEP.ShootSound = Sound("Weapon_Crossbow.Single")
+SWEP.ShootSound = Sound("grenade_launcher_shoot.ogg")
 
 function SWEP:PrimaryAttack()
 	local fire_rate = 0.7
@@ -127,7 +127,6 @@ function SWEP:Initialize()
 
 	// other initialize code goes here
 	self:SetWeaponHoldType("rpg")			-- Setting character to hold weapon on the shoulder
-	util.PrecacheSound("sound/Grenade_launcher_shoot.wav")
 
 	if CLIENT then
 	
