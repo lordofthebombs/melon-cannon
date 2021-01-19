@@ -127,7 +127,6 @@ function SWEP:Initialize()
 
 	// other initialize code goes here
 	self:SetWeaponHoldType("rpg")			-- Setting character to hold weapon on the shoulder
-	util.PrecacheSound("sound/Grenade_launcher_shoot.wav")
 
 	if CLIENT then
 	
