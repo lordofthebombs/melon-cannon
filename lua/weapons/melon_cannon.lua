@@ -1,32 +1,33 @@
 -- SWEP Data
-SWEP.PrintName = "Melon Cannon"
-SWEP.Author = "lordofthebombs"
-SWEP.Contact = "https://steamcommunity.com/id/lordofthebombs/"
-SWEP.Instructions = "Left click to fire a melon.\nRight click to fire a cluster of melons."
-SWEP.Spawnable = true
-SWEP.AdminOnly = false
+SWEP.PrintName 							= "Melon Cannon"
+SWEP.Author 							= "lordofthebombs"
+SWEP.Contact 							= "https://steamcommunity.com/id/lordofthebombs/"
+SWEP.Instructions 						= "Left click to fire a melon.\nRight click to fire a cluster of melons."
+SWEP.Spawnable 							= true
+SWEP.AdminOnly 							= false
 
 -- Ammo info
-SWEP.Primary.ClipSize = -1
-SWEP.Primary.DefaultClip = -1
-SWEP.Primary.Automatic = true
-SWEP.Primary.Ammo = "none"
+SWEP.Primary.ClipSize 					= -1
+SWEP.Primary.DefaultClip 				= -1
+SWEP.Primary.Automatic 					= true
+SWEP.Primary.Ammo 						= "none"
 
-SWEP.Secondary.ClipSize = -1
-SWEP.Secondary.DefaultClip = -1
-SWEP.Secondary.Automatic = false
-SWEP.Secondary.Ammo = "none"
+SWEP.Secondary.ClipSize 				= -1
+SWEP.Secondary.DefaultClip 				= -1
+SWEP.Secondary.Automatic 				= false
+SWEP.Secondary.Ammo 					= "none"
 
-SWEP.Weight = 5
-SWEP.AutoSwitchTo = false
-SWEP.AutoSwitchFrom = false
+SWEP.Weight 							= 5
+SWEP.AutoSwitchTo 						= false
+SWEP.AutoSwitchFrom 					= false
 
-SWEP.Slot = 1
-SWEP.SlotPos = 2
-SWEP.DrawAmmo = false
-SWEP.DrawCrosshair = true
+SWEP.Slot 								= 1
+SWEP.SlotPos 							= 2
+SWEP.DrawAmmo 							= false
+SWEP.DrawCrosshair 						= true
 
-SWEP.CSMuzzleFlashes = true
+SWEP.CSMuzzleFlashes 					= true
+
 
 SWEP.ViewModel = "models/weapons/c_rpg.mdl"
 SWEP.WorldModel = "models/weapons/w_rocket_launcher.mdl"
@@ -114,6 +115,7 @@ end
 function SWEP:Initialize()
 
 	// other initialize code goes here
+	self:SetWeaponHoldType("rpg")			-- Setting character to hold weapon on the shoulder
 
 	if CLIENT then
 	
