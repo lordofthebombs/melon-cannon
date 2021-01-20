@@ -26,7 +26,7 @@ SWEP.SlotPos 							= 2
 SWEP.DrawAmmo 							= true
 SWEP.DrawCrosshair 						= true
 
-SWEP.CSMuzzleFlashes 					= true
+SWEP.ReloadingTime							= 0.25
 
 -- Weapon view settings
 SWEP.ViewModelFOV 						= 54
@@ -40,24 +40,56 @@ SWEP.WElements = {
 	["melon"] = { type = "Model", model = "models/props_junk/watermelon01.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(19.6, 1.662, -9.867), angle = Angle(7.737, -87.154, -20.934), size = Vector(0.397, 0.397, 0.397), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 }
 
+-- Sounds
 SWEP.ShootSound = Sound("grenade_launcher_shoot.ogg")
+SWEP.ReloadSound = Sound("sniper_railgun_world_reload.ogg")
+SWEP.EmptyClipSound = Sound("weapons/ar2/ar2_empty.wav")
 
 -- Set up for muzzle flash
---game.AddParticles( "particles/muzzleflashes.pcf" )
---PrecacheParticleSystem( "muzzle_pistols" )
+game.AddParticles("particles/devtest.pcf")
+PrecacheParticleSystem("weapon_muzzle_flash_assaultrifle")
+
 
 function SWEP:PrimaryAttack()
 	local fire_rate = 0.7
     self:SetNextPrimaryFire(CurTime() + fire_rate)    -- Fire rate
     -- Shooting the melon
-	self:shoot_melon()
-	self:TakePrimaryAmmo(1)
+	if self:Clip1() > 0 then 		-- Added in a check to stop melons from shooting using reserve ammo
+		self:shoot_melon()
+		self:TakePrimaryAmmo(1)
+		self:ShootEffects()
+	else
+		self:EmitSound(self.EmptyClipSound)
+	end
 end
+
 
 function SWEP:SecondaryAttack()
     local fire_rate = 1.0
-    self:SetNextSecondaryFire(CurTime() + fire_rate)
+	self:SetNextSecondaryFire(CurTime() + fire_rate)
+	print("Secondary shot")
 end
+
+-- Took reload function based from https://maurits.tv/data/garrysmod/wiki/wiki.garrysmod.com/index1bed.html
+function SWEP:Reload()
+
+	local owner = self:GetOwner()
+	print(owner:GetName())
+
+	if self.ReloadingTime and CurTime() <= self.ReloadingTime then return end
+ 
+	if ( self:Clip1() < self.Primary.ClipSize and self.Owner:GetAmmoCount( self.Primary.Ammo ) > 0 ) then
+		self:EmitSound(self.ReloadSound)
+		self:DefaultReload(ACT_VM_RELOAD)
+		owner:SetAnimation(ACT_RELOAD_SHOTGUN)
+        local AnimationTime = self.Owner:GetViewModel():SequenceDuration()
+    	self.ReloadingTime = CurTime() + AnimationTime
+    	self:SetNextPrimaryFire(CurTime() + AnimationTime)
+    	self:SetNextSecondaryFire(CurTime() + AnimationTime)
+	end
+ 
+end
+
 
 -- Function to shoot the single melon
 function SWEP:shoot_melon()
@@ -100,7 +132,7 @@ function SWEP:shoot_melon()
 	self:EmitSound(self.ShootSound)
 
 	-- Muzzle flash
-	--ParticleEffect("muzzle_pistols", pos, owner:EyeAngles(), nil)
+	ParticleEffect("weapon_muzzle_flash_assaultrifle", pos, owner:EyeAngles(), nil)
 
 	ent:SetPhysicsAttacker(owner, 5)		-- Sets the player as the attacker
  
