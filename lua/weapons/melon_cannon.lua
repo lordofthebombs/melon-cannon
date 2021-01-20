@@ -2,6 +2,7 @@
 SWEP.PrintName 							= "Melon Cannon"
 SWEP.Author 							= "lordofthebombs"
 SWEP.Instructions 						= "Left click to fire a melon.\nRight click to fire a cluster of explosive melons."
+SWEP.Category 							= "Lord's Wacky Weapons"
 SWEP.Spawnable 							= true
 SWEP.AdminOnly 							= false
 
@@ -72,16 +73,11 @@ end
 
 -- Took reload function based from https://maurits.tv/data/garrysmod/wiki/wiki.garrysmod.com/index1bed.html
 function SWEP:Reload()
-
-	local owner = self:GetOwner()
-	print(owner:GetName())
-
 	if self.ReloadingTime and CurTime() <= self.ReloadingTime then return end
  
 	if ( self:Clip1() < self.Primary.ClipSize and self.Owner:GetAmmoCount( self.Primary.Ammo ) > 0 ) then
 		self:EmitSound(self.ReloadSound)
 		self:DefaultReload(ACT_VM_RELOAD)
-		owner:SetAnimation(ACT_RELOAD_SHOTGUN)
         local AnimationTime = self.Owner:GetViewModel():SequenceDuration()
     	self.ReloadingTime = CurTime() + AnimationTime
     	self:SetNextPrimaryFire(CurTime() + AnimationTime)
