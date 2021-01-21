@@ -37,6 +37,5 @@ end
 
 -- Plays sounds on collision with the world
 function ENT:PhysicsCollide(col_data, phys)
-    print(col_data.Speed)
     if col_data.Speed > 150 then self:EmitSound(Sound("Canister.ImpactHard")) end
 end
