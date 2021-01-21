@@ -2,6 +2,7 @@ AddCSLuaFile("shared.lua")
 AddCSLuaFile("cl_init.lua")
 include("shared.lua")
 
+
 function ENT:Initialize()
     -- Setting the model
     self:SetModel("models/props_junk/watermelon01.mdl")
@@ -31,4 +32,11 @@ function ENT:OnRemove()
 	explosion:Spawn() -- Spawn the explosion
 	explosion:SetKeyValue( "iMagnitude", "100" ) -- the magnitude of the explosion
 	explosion:Fire( "Explode", 0, 0 ) -- explode
+end
+
+
+-- Plays sounds on collision with the world
+function ENT:PhysicsCollide(col_data, phys)
+    print(col_data.Speed)
+    if col_data.Speed > 150 then self:EmitSound(Sound("Canister.ImpactHard")) end
 end
