@@ -49,10 +49,15 @@ SWEP.WElements = {
 SWEP.ShootSound = Sound("grenade_launcher_shoot.ogg")
 SWEP.ReloadSound = Sound("sniper_railgun_world_reload.ogg")
 SWEP.EmptyClipSound = Sound("weapons/ar2/ar2_empty.wav")
+SWEP.EmptySecondary = Sound("DoSpark")
 
 -- Set up for muzzle flash
 game.AddParticles("particles/devtest.pcf")
 PrecacheParticleSystem("weapon_muzzle_flash_assaultrifle")
+
+-- Set up for secondary failure
+game.AddParticles("particles/hunter_projectile.pcf")
+PrecacheParticleSystem("hunter_muzzle_flash_b")
 
 
 function SWEP:PrimaryAttack()
@@ -70,19 +75,22 @@ end
 
 
 function SWEP:SecondaryAttack()
-    self:SetNextSecondaryFire(CurTime() + self.Secondary.FireRate)
+    local owner = self:GetOwner()
+    local aimvec = owner:GetAimVector()
+    pos = aimvec * 16
+    pos:Add(owner:EyePos())
 
-    -- Sound
-	self:EmitSound(self.ShootSound)
-    
     if self:Clip1() >= 10 and self:Clip1() <= 20 then 		-- Only Shoots cluster if there is enough ammo to deduct
+            -- Sound
+	    self:EmitSound(self.ShootSound)
 		self:TakePrimaryAmmo(10)
         self:ShootEffects()
         for i = 0, 10 do
             self:cluster_shot()
         end
     else
-        self:EmitSound(self.EmptyClipSound)
+        self:EmitSound(self.EmptySecondary)
+        ParticleEffect("hunter_muzzle_flash_b", pos, owner:EyeAngles(), nil)
 	end
 end
 
@@ -187,7 +195,7 @@ function SWEP:cluster_shot()
 	-- Getting physics of entity
 	local phys = ent:GetPhysicsObject()
 	if not phys:IsValid() then ent:Remove() return end      -- Ends script if physics is invalid
-	aimvec:Mul(1000000)
+	aimvec:Mul(10000)
 	phys:ApplyForceCenter(aimvec)
 	local angle_velocity = Vector(0, 1000, 0)
     phys:AddAngleVelocity(angle_velocity)
