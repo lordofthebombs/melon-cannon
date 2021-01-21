@@ -20,7 +20,7 @@ function ENT:Initialize()
     local phys = self:GetPhysicsObject()
     if phys:IsValid() then phys:Wake() end
 
-    timer.Simple(2 + math.random(0.0, 1.0) + math.random(), function() self:Remove() end)
+    timer.Simple(2 + math.random(0, 1) + math.random(), function() self:Remove() end)
 end
 
 
