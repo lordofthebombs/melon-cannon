@@ -156,7 +156,7 @@ function SWEP:shoot_melon()
 	-- Muzzle flash
 	ParticleEffect("weapon_muzzle_flash_assaultrifle", pos, owner:EyeAngles(), nil)
 
-	ent:SetPhysicsAttacker(owner, 5)		-- Sets the player as the attacker
+	ent:SetPhysicsAttacker(owner, 10)		-- Sets the player as the attacker
  
 	-- Assuming we're playing in Sandbox mode we want to add this
 	-- entity to the cleanup and undo lists. This is done like so.
@@ -198,12 +198,16 @@ function SWEP:cluster_shot()
 	-- Getting physics of entity
 	local phys = ent:GetPhysicsObject()
 	if not phys:IsValid() then ent:Remove() return end      -- Ends script if physics is invalid
-	aimvec:Mul(10000)
+	aimvec:Mul(8000)
 	phys:ApplyForceCenter(aimvec)
 	local angle_velocity = Vector(0, 1000, 0)
     phys:AddAngleVelocity(angle_velocity)
     
-	ent:SetPhysicsAttacker(owner, 5)		-- Sets the player as the attacker
+    ent:SetPhysicsAttacker(owner, 10)		-- Sets the player as the attacker
+
+    -- Setting attacker as explosion owner
+    local damage_info = DamageInfo()
+    damage_info:SetAttacker(ent)
 
     -- Muzzle flash
     ParticleEffect("weapon_muzzle_flash_assaultrifle", muzzle_flash_pos, owner:EyeAngles(), nil)
