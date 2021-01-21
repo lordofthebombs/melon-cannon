@@ -5,5 +5,5 @@ ENT.Base                    = "base_gmodentity"
 ENT.Author                  = "lordofthebombs"
 ENT.Category                = "Lord's Wacky Entities"
 ENT.PrintName               = "Explosive Melon"
-ENT.Spawnable               = true
+ENT.Spawnable               = false
 ENT.RenderGroup             = RENDERGROUP_BOTH
