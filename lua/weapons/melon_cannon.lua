@@ -80,6 +80,8 @@ function SWEP:SecondaryAttack()
     pos = aimvec * 16
     pos:Add(owner:EyePos())
 
+    self:SetNextSecondaryFire(CurTime() + self.Secondary.FireRate)
+
     if self:Clip1() >= 10 and self:Clip1() <= 20 then 		-- Only Shoots cluster if there is enough ammo to deduct
             -- Sound
 	    self:EmitSound(self.ShootSound)
