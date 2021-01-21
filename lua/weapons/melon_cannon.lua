@@ -7,16 +7,20 @@ SWEP.Spawnable 							= true
 SWEP.AdminOnly 							= false
 
 -- Ammo info
-SWEP.Primary.ClipSize 					= 10
-SWEP.Primary.DefaultClip 				= 30
+SWEP.Primary.ClipSize 					= 20
+SWEP.Primary.DefaultClip 				= 80
 SWEP.Primary.Automatic 					= true
 SWEP.Primary.Ammo 						= "AR2"
 SWEP.Primary.Recoil						= 10
+SWEP.Primary.FireRate                   = 0.7
 
 SWEP.Secondary.ClipSize 				= -1
 SWEP.Secondary.DefaultClip 				= -1
 SWEP.Secondary.Automatic 				= false
 SWEP.Secondary.Ammo 					= "none"
+SWEP.Secondary.FireRate                 = 2
+
+SWEP.ClusterThreshold                   = 10
 
 SWEP.Weight 							= 5
 SWEP.AutoSwitchTo 						= false
@@ -52,8 +56,8 @@ PrecacheParticleSystem("weapon_muzzle_flash_assaultrifle")
 
 
 function SWEP:PrimaryAttack()
-	local fire_rate = 0.7
-    self:SetNextPrimaryFire(CurTime() + fire_rate)    -- Fire rate
+
+    self:SetNextPrimaryFire(CurTime() + self.Primary.FireRate)    -- Fire rate
     -- Shooting the melon
 	if self:Clip1() > 0 then 		-- Added in a check to stop melons from shooting using reserve ammo
 		self:shoot_melon()
@@ -66,9 +70,20 @@ end
 
 
 function SWEP:SecondaryAttack()
-    local fire_rate = 1.0
-	self:SetNextSecondaryFire(CurTime() + fire_rate)
-	print("Secondary shot")
+    self:SetNextSecondaryFire(CurTime() + self.Secondary.FireRate)
+
+    -- Sound
+	self:EmitSound(self.ShootSound)
+    
+    if self:Clip1() >= 10 and self:Clip1() <= 20 then 		-- Only Shoots cluster if there is enough ammo to deduct
+		self:TakePrimaryAmmo(10)
+        self:ShootEffects()
+        for i = 0, 10 do
+            self:cluster_shot()
+        end
+    else
+        self:EmitSound(self.EmptyClipSound)
+	end
 end
 
 -- Took reload function based from https://maurits.tv/data/garrysmod/wiki/wiki.garrysmod.com/index1bed.html
@@ -135,6 +150,57 @@ function SWEP:shoot_melon()
 	-- Assuming we're playing in Sandbox mode we want to add this
 	-- entity to the cleanup and undo lists. This is done like so.
 	cleanup.Add(owner, "props", ent)
+end
+
+
+-- Cluster shot implementation
+function SWEP:cluster_shot()	
+	local owner = self:GetOwner()
+
+	local punch_angle = Angle(math.random(-5, 0) + math.random(), math.random(-4, 4) + math.random(), math.random(-4, 4) + math.random())
+	owner:ViewPunch(punch_angle)			-- Simulates recoil
+
+	if not owner:IsValid() then return end		-- Checks if owner is valid
+
+	if CLIENT then return end
+
+	local ent = ents.Create("entity_explosive_melon")
+
+	-- Check to see if entity is created
+	if not ent:IsValid() then return end
+	
+	-- Getting aim vector so I can place the melon at the correct place when firing
+	local aimvec = owner:GetAimVector()
+	local pos = aimvec * 16
+    pos:Add(owner:EyePos())     -- Translates vector to world coordinates
+
+    local muzzle_flash_pos = Vector(pos.x, pos.y, pos.z)
+
+    pos:Add(VectorRand(-20, 20))		-- Adding a random vector to give a shotgun effect
+
+	-- Setting position 16 units in front of eyes
+	ent:SetPos(pos)
+	local offset = Angle(0, -90, 0)
+	ent:SetAngles(owner:EyeAngles() + offset)
+	ent:Spawn()
+
+	-- Getting physics of entity
+	local phys = ent:GetPhysicsObject()
+	if not phys:IsValid() then ent:Remove() return end      -- Ends script if physics is invalid
+	aimvec:Mul(1000000)
+	phys:ApplyForceCenter(aimvec)
+	local angle_velocity = Vector(0, 1000, 0)
+    phys:AddAngleVelocity(angle_velocity)
+    
+	ent:SetPhysicsAttacker(owner, 5)		-- Sets the player as the attacker
+
+    -- Muzzle flash
+    ParticleEffect("weapon_muzzle_flash_assaultrifle", muzzle_flash_pos, owner:EyeAngles(), nil)
+
+	-- Assuming we're playing in Sandbox mode we want to add this
+	-- entity to the cleanup and undo lists. This is done like so.
+	cleanup.Add(owner, "props", ent)
+	
 end
 
 
