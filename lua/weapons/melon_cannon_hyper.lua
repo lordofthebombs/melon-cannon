@@ -8,7 +8,7 @@ SWEP.IconOverride 						= "materials/weapons/melon_cannon_hyper.png"
 SWEP.Spawnable 							= true
 SWEP.AdminOnly 							= true
 SWEP.BounceWeaponIcon 					= false
---SWEP.WepSelectIcon                      = surface.GetTextureID("weapons/melon_cannon")
+SWEP.WepSelectIcon                      = Material("weapons/melon_cannon_hyper.png")
 
 -- Ammo info
 SWEP.Primary.ClipSize 					= 20
@@ -221,6 +221,33 @@ function SWEP:cluster_shot()
     
 end
 
+
+-- Draws wepselecticon
+function SWEP:DrawWeaponSelection( x, y, wide, tall, alpha )
+
+	-- Set us up the texture
+	surface.SetDrawColor( 255, 255, 255, alpha )
+	surface.SetMaterial( self.WepSelectIcon )
+
+	-- Lets get a sin wave to make it bounce
+	local fsin = 0
+
+	if ( self.BounceWeaponIcon == true ) then
+		fsin = math.sin( CurTime() * 10 ) * 5
+	end
+
+	-- Borders
+	y = y - 30
+	x = x + 10
+	wide = wide - 20
+
+	-- Draw that mother
+	surface.DrawTexturedRect( x + fsin, y - fsin,  wide - fsin * 2 , wide - fsin)
+
+	-- Draw weapon info box
+	self:PrintWeaponInfo( x + wide + 20, y + tall * 0.95, alpha )
+
+end
 
 
 /********************************************************

@@ -8,6 +8,7 @@ SWEP.IconOverride 						= "materials/weapons/melon_cannon.png"
 SWEP.Spawnable 							= true
 SWEP.AdminOnly 							= false
 SWEP.BounceWeaponIcon 					= false
+if CLIENT then SWEP.WepSelectIcon       = Material("weapons/melon_cannon.png") end
 
 -- Ammo info
 SWEP.Primary.ClipSize 					= 20
@@ -148,7 +149,7 @@ function SWEP:shoot_melon()
     -- Getting physics of entity
     local phys = ent:GetPhysicsObject()
     if not phys:IsValid() then ent:Remove() return end      -- Ends script if physics is invalid
-    aimvec:Mul(1000000)
+    aimvec:Mul(25000)
     phys:ApplyForceCenter(aimvec)
     local angle_velocity = Vector(0, 1000, 0)
     phys:AddAngleVelocity(angle_velocity)
@@ -218,6 +219,34 @@ function SWEP:cluster_shot()
     -- entity to the cleanup and undo lists. This is done like so.
     cleanup.Add(owner, "props", ent)
     
+end
+
+
+-- Draws wepselecticon
+function SWEP:DrawWeaponSelection( x, y, wide, tall, alpha )
+
+	-- Set us up the texture
+	surface.SetDrawColor( 255, 255, 255, alpha )
+	surface.SetMaterial( self.WepSelectIcon )
+
+	-- Lets get a sin wave to make it bounce
+	local fsin = 0
+
+	if ( self.BounceWeaponIcon == true ) then
+		fsin = math.sin( CurTime() * 10 ) * 5
+	end
+
+	-- Borders
+	y = y - 30
+	x = x + 10
+	wide = wide - 20
+
+	-- Draw that mother
+	surface.DrawTexturedRect( x + fsin, y - fsin,  wide - fsin * 2 , wide - fsin)
+
+	-- Draw weapon info box
+	self:PrintWeaponInfo( x + wide + 20, y + tall * 0.95, alpha )
+
 end
 
 
