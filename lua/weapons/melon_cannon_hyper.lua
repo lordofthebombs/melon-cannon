@@ -1,5 +1,5 @@
 -- SWEP Data
-SWEP.PrintName 							= "Weaponized Melon Device - Hyper Velocity"
+SWEP.PrintName 							= "WMD - Hyper Velocity"
 SWEP.Purpose                            = "To administer extreme melon justice."
 SWEP.Author 							= "lordofthebombs"
 SWEP.Instructions 						= "Left click to fire a melon.\nRight click to fire a cluster of explosive melons."
