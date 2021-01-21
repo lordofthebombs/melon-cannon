@@ -1,5 +1,6 @@
 -- SWEP Data
-SWEP.PrintName 							= "Melon Cannon"
+SWEP.PrintName 							= "Weaponized Melon Device"
+SWEP.Purpose                            = "To administer melon justice."
 SWEP.Author 							= "lordofthebombs"
 SWEP.Instructions 						= "Left click to fire a melon.\nRight click to fire a cluster of explosive melons."
 SWEP.Category 							= "Lord's Wacky Weapons"
