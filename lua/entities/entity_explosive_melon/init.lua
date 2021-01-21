@@ -29,6 +29,6 @@ function ENT:OnRemove()
     local explosion = ents.Create( "env_explosion" ) -- The explosion entity
 	explosion:SetPos( self:GetPos() ) -- Put the position of the explosion at the position of the entity
 	explosion:Spawn() -- Spawn the explosion
-	explosion:SetKeyValue( "iMagnitude", "50" ) -- the magnitude of the explosion
+	explosion:SetKeyValue( "iMagnitude", "100" ) -- the magnitude of the explosion
 	explosion:Fire( "Explode", 0, 0 ) -- explode
 end
