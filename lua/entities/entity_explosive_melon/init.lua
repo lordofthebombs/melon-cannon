@@ -21,6 +21,14 @@ function ENT:Initialize()
     local phys = self:GetPhysicsObject()
     if phys:IsValid() then phys:Wake() end
 
+    if self.Owner:IsValid() then
+		self.Owner = self.Owner
+	elseif self:GetCreator():IsValid() then
+		self.Owner = self:GetCreator()
+	else
+		self.Owner = nil
+	end
+
     timer.Simple(2 + math.random(0, 1) + math.random(), function() self:Remove() end)
 end
 
@@ -28,7 +36,8 @@ end
 -- Taken from https://wiki.facepunch.com/gmod/ENTITY:OnRemove
 function ENT:OnRemove()
     local explosion = ents.Create( "env_explosion" ) -- The explosion entity
-	explosion:SetPos( self:GetPos() ) -- Put the position of the explosion at the position of the entity
+    explosion:SetPos( self:GetPos() ) -- Put the position of the explosion at the position of the entity
+    explosion:SetOwner(self.Owner)
 	explosion:Spawn() -- Spawn the explosion
 	explosion:SetKeyValue( "iMagnitude", "100" ) -- the magnitude of the explosion
 	explosion:Fire( "Explode", 0, 0 ) -- explode

@@ -1,15 +1,9 @@
 {
-	"title"		:	"Weaponized Melon Device",
-	"type"		:	"weapon",
-	"tags"		:	[ "fun", "comic" ],
-	"ignore"	:
+	"title": "Weaponized Melon Device",
+	"type": "weapon",
+	"tags": 
 	[
-		"*.psd",
-		"*.vcproj",
-        "*.svn*",
-        ".gitignore",
-        ".vscode",
-        "README.md",
-        "LICENSE"
+		"comic",
+		"fun"
 	]
 }

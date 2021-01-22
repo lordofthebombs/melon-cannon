@@ -196,6 +196,8 @@ function SWEP:cluster_shot()
     ent:SetPos(pos)
     local offset = Angle(0, -90, 0)
     ent:SetAngles(owner:EyeAngles() + offset)
+
+    ent:SetOwner(owner)
     ent:Spawn()
 
     -- Getting physics of entity
