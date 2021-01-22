@@ -91,7 +91,7 @@ function SWEP:SecondaryAttack()
         self:EmitSound(self.ShootSound)
         self:TakePrimaryAmmo(10)
         self:ShootEffects()
-        for i = 0, 10 do
+        for i = 1, 10 do
             self:cluster_shot()
         end
     else
