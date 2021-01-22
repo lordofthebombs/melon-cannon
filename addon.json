@@ -7,7 +7,7 @@
 		"*.psd",
 		"*.vcproj",
         "*.svn*",
-        ".gitignore",
+        ".git*",
         ".vscode",
         "README.md",
         "LICENSE"
