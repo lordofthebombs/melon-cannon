@@ -80,6 +80,9 @@ end
 
 function SWEP:SecondaryAttack()
     local owner = self:GetOwner()
+	
+    if not owner:IsValid() then return end		-- Added a check for the owner
+	
     local aimvec = owner:GetAimVector()
     pos = aimvec * 16
     pos:Add(owner:EyePos())
