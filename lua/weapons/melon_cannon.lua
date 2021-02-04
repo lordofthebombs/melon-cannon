@@ -35,7 +35,7 @@ SWEP.SlotPos 							= 2
 SWEP.DrawAmmo 							= true
 SWEP.DrawCrosshair 						= true
 
-SWEP.ReloadingTime							= 0.25
+SWEP.ReloadingTime						= 0.25
 
 -- Weapon view settings
 SWEP.ViewModelFOV 						= 54
@@ -105,12 +105,13 @@ end
 
 -- Took reload function based from https://maurits.tv/data/garrysmod/wiki/wiki.garrysmod.com/index1bed.html
 function SWEP:Reload()
+    local owner = self:GetOwner()
     if self.ReloadingTime and CurTime() <= self.ReloadingTime then return end
  
     if ( self:Clip1() < self.Primary.ClipSize and self.Owner:GetAmmoCount( self.Primary.Ammo ) > 0 ) then
         self:EmitSound(self.ReloadSound)
         self:DefaultReload(ACT_VM_RELOAD)
-        local AnimationTime = self.Owner:GetViewModel():SequenceDuration()
+        local AnimationTime = owner:GetViewModel():SequenceDuration()
         self.ReloadingTime = CurTime() + AnimationTime
         self:SetNextPrimaryFire(CurTime() + AnimationTime)
         self:SetNextSecondaryFire(CurTime() + AnimationTime)
